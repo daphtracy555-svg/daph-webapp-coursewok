@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Dashboard</title>
+
+<style>
+
+body{
+    font-family: Arial;
+    padding: 40px;
+}
+
+/* Table */
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+/* Table header */
+th{
+    background-color:black;
+    color:white;
+    padding:12px;
+    text-align:center;
+}
+
+/* Table cells */
+td{
+    border:1px solid #ddd;
+    padding:10px;
+}
+
+/* Alternate rows */
+tr:nth-child(even){
+    background-color:#f2f2f2;
+}
+
+/* Buttons */
+button{
+    padding:6px 10px;
+    border:none;
+    cursor:pointer;
+}
+
+.edit-btn{
+    background-color:black;
+    color:white;
+}
+
+.delete-btn{
+    background-color:#dc3545;
+    color:white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Saved Contacts</h1>
+
+<% if (contacts.length === 0) { %>
+
+<p>No contacts found.</p>
+
+<% } else { %>
+<a href="/" style="text-decoration:none;">
+<button style="background:black;color:white;padding:8px 14px;margin-bottom:15px;">
+Back to Website  
+</button>
+</a>
+<table>
+
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Message</th>
+<th>Actions</th>
+</tr>
+
+<% contacts.forEach(contact => { %>
+
+<tr>
+<td><%= contact.name %></td>
+<td><%= contact.email %></td>
+<td><%= contact.message %></td>
+
+<td>
+
+<a href="/edit/<%= contact.id %>">
+<button class="edit-btn">Edit</button>
+</a>
+
+<form action="/delete/<%= contact.id %>" method="POST" style="display:inline;">
+<button class="delete-btn">Delete</button>
+</form>
+
+</td>
+
+</tr>
+
+<% }) %>
+
+</table>
+
+<% } %>
+
+</body>
+</html>
