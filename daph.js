@@ -1,3 +1,4 @@
+require('dotenv').config();
 const mysql = require("mysql2");
 const express = require('express');
 const path = require('path');
@@ -112,7 +113,8 @@ app.post('/update/:id', (req, res) => {
     });
 });
 
-// start server
+const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
