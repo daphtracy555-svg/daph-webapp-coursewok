@@ -69,9 +69,11 @@ app.get('/admin/contacts', (req, res) => {
 
     connection.query(sql, (err, results) => {
         if (err) {
-            console.log(err);
-            return res.send("Error fetching data");
+            console.log("🔥 MYSQL ERROR:", err);
+            return res.status(500).send("Database query failed");
         }
+
+        console.log("DATA LOADED:", results);
 
         res.render('admin', { contacts: results });
     });
