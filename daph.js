@@ -80,16 +80,21 @@ app.get('/admin/contacts', (req, res) => {
 });
 //deleting contact info
 app.post('/delete/:id', (req, res) => {
-    const sql = "DELETE FROM contacts WHERE id = ?";
+    console.log("DELETE REQUEST ID:", req.params.id);
 
-    db.query(sql, [req.params.id], (err, result) => {
-        if (err) {
-            console.log(err);
-            res.send("Error deleting contact");
-        } else {
+    connection.query(
+        "DELETE FROM contacts WHERE id = ?",
+        [req.params.id],
+        (err, result) => {
+            if (err) {
+                console.log("🔥 MYSQL DELETE ERROR:", err.sqlMessage);
+                return res.status(500).send("Delete failed");
+            }
+
+            console.log("DELETE SUCCESS:", result);
             res.redirect('/admin/contacts');
         }
-    });
+    );
 });
 
 //editing contact info
