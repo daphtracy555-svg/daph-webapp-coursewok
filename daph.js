@@ -1,3 +1,4 @@
+
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
@@ -8,7 +9,13 @@ const path = require('path');
 const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+const cors = require("cors");
+app.use(cors({
+  origin: "*"
+}));
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 // middleware
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
@@ -47,26 +54,26 @@ app.post("/contact", (req, res) => {
 
     const sql = "INSERT INTO contacts (name, email, message) VALUES (?, ?, ?)";
 
-    db.query(sql, [name, email, message], (err, result) => {
+    connection.query(sql, [name, email, message], (err, result) => {
         if (err) {
             console.log(err);
-            res.send("Error saving data");
-        } else {
-            res.send("Message sent successfully!");
+            return res.status(500).json({ success: false });
         }
+
+        res.json({ success: true });
     });
 });
 
 app.get('/admin/contacts', (req, res) => {
     const sql = "SELECT * FROM contacts";
 
-    db.query(sql, (err, results) => {
+    connection.query(sql, (err, results) => {
         if (err) {
             console.log(err);
-            res.send("Error fetching data");
-        } else {
-            res.render('admin', { contacts: results });
+            return res.send("Error fetching data");
         }
+
+        res.render('admin', { contacts: results });
     });
 });
 //deleting contact info
