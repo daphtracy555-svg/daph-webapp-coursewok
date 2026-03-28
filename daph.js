@@ -94,13 +94,17 @@ app.post('/delete/:id', (req, res) => {
 app.get('/edit/:id', (req, res) => {
     const sql = "SELECT * FROM contacts WHERE id = ?";
 
-    db.query(sql, [req.params.id], (err, results) => {
+    connection.query(sql, [req.params.id], (err, results) => {
         if (err) {
-            console.log(err);
-            res.send("Error fetching contact");
-        } else {
-            res.render('edit', { contact: results[0] });
+            console.log("DB ERROR:", err);
+            return res.status(500).send("Database error");
         }
+
+        if (results.length === 0) {
+            return res.status(404).send("Contact not found");
+        }
+
+        res.render('edit', { contact: results[0] });
     });
 });
 
@@ -108,15 +112,15 @@ app.get('/edit/:id', (req, res) => {
 app.post('/update/:id', (req, res) => {
     const { name, email, message } = req.body;
 
-    const sql = "UPDATE contacts SET name = ?, email = ?, message = ? WHERE id = ?";
+    const sql = "UPDATE contacts SET name=?, email=?, message=? WHERE id=?";
 
-    db.query(sql, [name, email, message, req.params.id], (err, result) => {
+    connection.query(sql, [name, email, message, req.params.id], (err) => {
         if (err) {
-            console.log(err);
-            res.send("Error updating contact");
-        } else {
-            res.redirect('/admin/contacts');
+            console.log("UPDATE ERROR:", err);
+            return res.status(500).send("Update failed");
         }
+
+        res.redirect('/admin/contacts');
     });
 });
 
